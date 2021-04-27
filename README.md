@@ -61,12 +61,13 @@
 | fmrf-server | 服务端 | 包含 fmrf-api |
 | fmrf-um | 上位机软件 | 连接现场各硬件设备 |
 | fmrf-firmware | 胖蚊子兔场固件 | 现场各硬件设备单片机中执行的控制程序 |
-| fmrf-cli | 命令行界面 | 包含 docker, fmrf-gateway |
-| fmrf-ui | 图形界面 | flutter |
-| fmrf-ca | 证书签发/密钥管理 | 用于安全性方面 |
+| fmrf-cli | 命令行界面 | 包含 docker, fmrf-gateway (nginx) |
+| fmrf-ui | 图形界面 | flutter (a-open-push api) |
+| fmrf-ca | 证书签发/密钥管理 | 用于安全性方面 (OCSP) |
 | fmrf-media | 媒体服务 | 单独部署 |
 | fmrf-watchdog | 自监视 | |
-| fmrf-cloud | 胖蚊子兔场云端 | 可选组件, 支持多个公共云环境 |
+| fmrf-cloud | 胖蚊子兔场瘦云端 | [可选组件] 支持多个公共云环境 (考虑最便宜的云服务器) |
+| fmrf-push-ali | 手机端消息推送 (阿里云接口) | [可选组件] Android apk (独立安装) |
 
 
 ## 胖蚊子兔场设计目标
@@ -112,11 +113,11 @@
 
 + 加速缓存数据库: redis
 
-+ 时序数据 (传感器数据, 日志) 存储: influxdb
++ 时序数据 (传感器数据, 日志) 存储: influxdb (influxdb iox, flux)
 
 + 媒体数据 (图片, 视频, 音频) 存储: minio
 
-+ 流式数据处理: vector
++ 时序数据采集 (系统自监视): telegraf
 
 ### 其余主要 (软件) 技术选型
 
@@ -127,6 +128,25 @@
 + 主要部署方式: docker
 
 + 主要服务端硬件平台: 树莓派 4B (8GB 内存, arm64v8)
+
++ fmrf-gateway: nginx (平滑升级, HTTPS 加密等)
+
++ 直播技术: WebRTC (flutter)
+
++ 视频点播: minio (mp4)
+
+### 胖蚊子兔场最低可用性安全性要求
+
++ 99% 的故障次数, 恢复时间不超过 1 小时.
+
++ 2 次故障间隔时间, 不小于 1 个月.
+
++ 安全停机: 系统故障停机 (比如断电, 被物理破坏, 各种故障, 手动关闭),
+  不会造成灾难性后果.
+
++ 系统本身不含有高危险性或可能造成严重后果的功能.
+
++ 安全优先于方便易用.
 
 
 ## LICENSE
